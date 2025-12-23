@@ -43,7 +43,16 @@ RETURNING
     [first_name, last_name, email, phone, password_hash, marketing_preference]
   );
 
-  return result.rows[0];
+    const user = result.rows[0];
+
+  const token = jwt.sign(
+    { id: user?.id, name: `${user?.first_name} ${user?.last_name}`, email: user?.email, role: user?.role },
+    config.jwt_secret!,
+    { expiresIn: '7d' }
+  );
+
+  delete user.password_hash;
+  return { token, user, rememberMe: false};
 };
 
 const loginUser = async (loginData: any) => {
@@ -71,13 +80,13 @@ const loginUser = async (loginData: any) => {
   const expiresIn = loginData.rememberMe ? "30d" : "1d";
 
   const token = jwt.sign(
-    { id: user?.id, name: user?.name, email: user?.email, role: user?.role },
+    { id: user?.id, name: `${user?.first_name} ${user?.last_name}`, email: user?.email, role: user?.role },
     config.jwt_secret!,
     { expiresIn: expiresIn }
   );
 
   delete user.password_hash;
-  return { token, user, rememberMe: loginData.rememberMe };
+  return { token, user, rememberMe: loginData?.rememberMe };
 };
 
 export const authService = {
