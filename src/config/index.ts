@@ -10,7 +10,7 @@ const config = {
     pg_password : process.env.PG_PASSWORD,
     pg_database : process.env.PG_DATABASE,
     // connection_str : process.env.CONNECTION_STR,
-    // jwt_secret : process.env.JWT_SECRET
+    jwt_secret : process.env.JWT_SECRET
 }
 
 export default config;
