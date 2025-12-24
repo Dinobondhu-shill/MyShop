@@ -78,8 +78,27 @@ const getMe = async (req: Request, res: Response) => {
   } catch (error: any) { return res.status(401).json({ message: "Invalid or expired token" }); }
 };
 
+const logoutUser = async (req : Request, res:Response) => {
+  try {
+    res.clearCookie("auth_token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+    }); 
+    return  res.status(200).json({
+      success: true,
+      message: "Logout successful",
+    });
+  } catch (error: any) {
+      return res.status(500).json({
+      success: false,
+      message: error.message || "Logout failed",
+    });
+  }
+}
+
 export const authController = {
   registerUser,
   loginUser,
-  getMe
+  getMe, logoutUser
 };
